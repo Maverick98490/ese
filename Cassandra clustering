@@ -1,38 +1,61 @@
 C:\Users\admin\CassandraCluster\docker-compose.yml
 //docker-compose.yml
-version: '3.8'
-
+version: "3.8"
 services:
   cassandra-node1:
     image: cassandra:latest
     container_name: cassandra-node1
     ports:
       - "9042:9042"
+    networks:
+      - cassandra_net
     environment:
       - CASSANDRA_CLUSTER_NAME=TestCluster
       - CASSANDRA_SEEDS=cassandra-node1
-    networks:
-      - cassandra-net
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra-node1
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+    healthcheck:
+      test: ["CMD", "nodetool", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   cassandra-node2:
     image: cassandra:latest
     container_name: cassandra-node2
+    ports:
+      - "9043:9042"
+    networks:
+      - cassandra_net
+    depends_on:
+      cassandra-node1:
+        condition: service_healthy
     environment:
       - CASSANDRA_CLUSTER_NAME=TestCluster
       - CASSANDRA_SEEDS=cassandra-node1
-    networks:
-      - cassandra-net
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra-node2
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
 
   cassandra-node3:
     image: cassandra:latest
     container_name: cassandra-node3
+    ports:
+      - "9044:9042"
+    networks:
+      - cassandra_net
+    depends_on:
+      cassandra-node1:
+        condition: service_healthy
     environment:
       - CASSANDRA_CLUSTER_NAME=TestCluster
       - CASSANDRA_SEEDS=cassandra-node1
-    networks:
-      - cassandra-net
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra-node3
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
 
 networks:
+  cassandra_net:
+    driver: bridge
+
 
 cmd1 -> docker-compose up -d
 cmd2 -> docker exec -it cassandra-node1 bash
@@ -54,5 +77,3 @@ cmd7 -> INSERT INTO students (student_id, name, age, branch)
 VALUES (uuid(), 'Bhavik', 21, 'CSE');
 cmd8 -> SELECT * FROM students;
 
-
-  cassandra-net:

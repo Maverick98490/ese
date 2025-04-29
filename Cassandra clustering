@@ -1,0 +1,58 @@
+C:\Users\admin\CassandraCluster\docker-compose.yml
+//docker-compose.yml
+version: '3.8'
+
+services:
+  cassandra-node1:
+    image: cassandra:latest
+    container_name: cassandra-node1
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_SEEDS=cassandra-node1
+    networks:
+      - cassandra-net
+
+  cassandra-node2:
+    image: cassandra:latest
+    container_name: cassandra-node2
+    environment:
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_SEEDS=cassandra-node1
+    networks:
+      - cassandra-net
+
+  cassandra-node3:
+    image: cassandra:latest
+    container_name: cassandra-node3
+    environment:
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_SEEDS=cassandra-node1
+    networks:
+      - cassandra-net
+
+networks:
+
+cmd1 -> docker-compose up -d
+cmd2 -> docker exec -it cassandra-node1 bash
+cmd3 -> cqlsh
+cmd4 -> CREATE KEYSPACE student_mgmt
+WITH replication = {
+  'class': 'SimpleStrategy',
+  'replication_factor': 3
+};
+cmd5 -> USE student_mgmt;
+cmd6 -> CREATE TABLE students (
+  student_id UUID PRIMARY KEY,
+  name TEXT,
+  age INT,
+  branch TEXT
+);
+
+cmd7 -> INSERT INTO students (student_id, name, age, branch)
+VALUES (uuid(), 'Bhavik', 21, 'CSE');
+cmd8 -> SELECT * FROM students;
+
+
+  cassandra-net:

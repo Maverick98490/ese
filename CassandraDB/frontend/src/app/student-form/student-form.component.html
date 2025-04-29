@@ -1,0 +1,39 @@
+<div class="student-form">
+  <h2>Add Student</h2>
+  <form (ngSubmit)="onSubmit()">
+    <div>
+      <label for="name">Name</label>
+      <input type="text" id="name" [(ngModel)]="student.name" name="name" required />
+    </div><br>
+
+    <div>
+      <label for="prn">PRN</label>
+      <input type="text" id="prn" [(ngModel)]="student.prn" name="prn" required />
+    </div><br>
+
+    <div>
+      <label for="mobile">Mobile Number</label>
+      <input type="text" id="mobile" [(ngModel)]="student.mobile" name="mobile" required />
+    </div><br>
+
+    <div>
+      <label for="branch">Branch</label>
+      <input type="text" id="branch" [(ngModel)]="student.branch" name="branch" required />
+    </div><br>
+
+    <button type="submit">Add Student</button>
+  </form>
+
+  <div *ngIf="message" [ngClass]="messageType" class="message">
+    {{ message }}
+  </div>
+
+  <h2>Student List</h2>
+  <ul>
+    <li *ngFor="let student of students">
+      Name: {{ student.name }} | PRN: {{ student.prn }} | Branch: {{ student.branch }} | Mobile: {{ student.mobile }}
+      <button (click)="deleteStudent(student.prn)">Delete</button>
+    </li>
+  </ul>
+  
+</div>

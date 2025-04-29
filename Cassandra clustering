@@ -77,3 +77,11 @@ cmd7 -> INSERT INTO students (student_id, name, age, branch)
 VALUES (uuid(), 'Bhavik', 21, 'CSE');
 cmd8 -> SELECT * FROM students;
 
+
+//Mysql clustering
+
+https://dev.mysql.com/doc/refman/8.0/en/mysql-cluster-install-docker.html
+
+docker pull container-registry.oracle.com/mysql/community-cluster:latest
+docker logs mysql1 2>&1 | Select-String "PASSWORD"
+

@@ -1,0 +1,6 @@
+/* Center the heading */
+h1 {
+    text-align: center;    /* Center the text horizontally */
+    margin-top: 20px;      /* Optional: add some space from the top */
+  }
+  
